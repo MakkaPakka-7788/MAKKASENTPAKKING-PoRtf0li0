@@ -34,6 +34,42 @@ header { background: #101010; border-bottom: 2px solid #333; padding: 18px 30px;
 .bottomText { text-align: center; margin-top: 35px; color: #555; font-size: 11px; }
 </style>
 </head>
+
+<div id="flashaccount-panel" style="position:fixed;top:12px;right:12px;z-index:9999;background:#111;color:#fff;padding:12px;border:1px solid #444;border-radius:10px;font-family:Arial,sans-serif;">
+  <strong>FlashAccount</strong>
+  <div id="flashaccount-status" style="margin:8px 0;">Checking sign-in...</div>
+  <button id="flashaccount-login" style="padding:8px 12px;cursor:pointer;">Sign in with Google</button>
+  <button id="flashaccount-logout" style="padding:8px 12px;cursor:pointer;display:none;">Sign out</button>
+</div>
+
+<script type="module">
+  import "./flashaccount.js";
+
+  const status = document.getElementById("flashaccount-status");
+  const login = document.getElementById("flashaccount-login");
+  const logout = document.getElementById("flashaccount-logout");
+
+  login.addEventListener("click", () => {
+    window.FlashAccount?.signInWithGoogle();
+  });
+
+  logout.addEventListener("click", () => {
+    window.FlashAccount?.signOut();
+  });
+
+  window.addEventListener("flashaccount-auth", event => {
+    const user = event.detail;
+
+    status.textContent = user
+      ? "Signed in as " + (user.displayName || user.email)
+      : "Not signed in";
+
+    login.style.display = user ? "none" : "inline-block";
+    logout.style.display = user ? "inline-block" : "none";
+  });
+</script>
+</body>
+
 <body>
 <header>
 <div class="logo">FLASHCARD<span>.COM</span></div>
